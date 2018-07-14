@@ -1,70 +1,72 @@
-module.exports = ({ instance }) => {
+let player;
 
-  let player;
+module.exports = {
+  preload,
+  create,
+  moveLeft,
+  moveRight,
+  jump,
+  stop,
+  isTouchingGround,
+  get: getPlayer
+};
 
-  return {
-    preload,
-    create,
-    moveLeft,
-    moveRight,
-    jump,
-    stop,
-    getPlayer
-  };
+function preload() {
+  Game.scene.load.spritesheet('dude',
+    'assets/media/images/dude.png',
+    { frameWidth: 32, frameHeight: 48 }
+  );
+}
 
-  const preload = () => {
-    instance.load.spritesheet('dude',
-      'assets/media/images/dude.png',
-      { frameWidth: 32, frameHeight: 48 }
-    );
-  }
+function create() {
+  player = Game.scene.physics.add.sprite(100, 450, 'dude');
+  player.setBounce(0.2);
+  player.setCollideWorldBounds(true);
 
-  const create = () => {
-    player = this.physics.add.sprite(100, 450, 'dude');
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+  Game.scene.anims.create({
+    key: 'left',
+    frames: Game.scene.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+    frameRate: 10,
+    repeat: -1
+  });
 
-    instance.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1
-    });
+  Game.scene.anims.create({
+    key: 'turn',
+    frames: [{ key: 'dude', frame: 4 }],
+    frameRate: 20
+  });
 
-    instance.anims.create({
-      key: 'turn',
-      frames: [{ key: 'dude', frame: 4 }],
-      frameRate: 20
-    });
+  Game.scene.anims.create({
+    key: 'right',
+    frames: Game.scene.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+    frameRate: 10,
+    repeat: -1
+  });
+}
 
-    instance.anims.create({
-      key: 'right',
-      frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-      frameRate: 10,
-      repeat: -1
-    });
-  }
+function moveLeft() {
+  player.setVelocityX(-160);
+  player.anims.play('left', true);
+};
 
-  const moveLeft = () => {
-    player.setVelocityX(-160);
-    player.anims.play('left', true);
-  };
+function moveRight() {
+  player.setVelocityX(160);
+  player.anims.play('right', true);
+};
 
-  const moveRight = () => {
-    player.setVelocityX(160);
-    player.anims.play('right', true);
-  };
+function jump() {
+  player.setVelocityY(-330);
+};
 
-  const jump = () => {
-    player.setVelocityY(-330);
-  };
+function stop() {
+  player.setVelocityX(0);
+  player.anims.play('turn');
+}
 
-  const stop = () => {
-    player.setVelocityX(0);
-    player.anims.play('turn');
-  }
+function isTouchingGround() {
+  return player.body.touching.down;
+}
 
-  const getPlayer = () => {
-    return player;
-  }
+function getPlayer() {
+  return player;
 }

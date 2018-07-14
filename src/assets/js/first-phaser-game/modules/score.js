@@ -1,19 +1,18 @@
-module.exports = ({ instance }) => {
 
-  let score = 0;
-  let scoreText;
 
-  return {
-    create,
-    add
-  };
+let score = 0;
+let scoreText;
 
-  const create = () => {
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-  };
+module.exports = {
+  create,
+  add
+};
 
-  const add = (points) => {
-    score += points;
-    scoreText.setText('Score: ' + score);
-  };
+function create() {
+  scoreText = Game.scene.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+};
+
+function add(points) {
+  score += points;
+  scoreText.setText('Score: ' + score);
 };

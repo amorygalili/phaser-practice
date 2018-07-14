@@ -20,6 +20,11 @@ module.exports = {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, 'dist')
   },
+  resolve: {
+    alias: {
+      'game-modules': path.resolve(__dirname, "src/assets/js/first-phaser-game/modules"),
+    },
+  },
   module: {
     rules: [
       {

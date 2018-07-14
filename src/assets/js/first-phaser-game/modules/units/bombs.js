@@ -1,26 +1,30 @@
-module.exports = ({ instance }) => {
 
-  let bombs;
 
-  return {
-    preload,
-    create,
-    getBombs
-  };
+let bombs;
 
-  const preload = () => {
-    instance.load.image('bomb', 'assets/media/images/bomb.png');
-  }
+module.exports = {
+  preload,
+  init,
+  add,
+  get: getBombs
+};
 
-  const create = () => {
-    bomb = bombs.create(x, 16, 'bomb');
-    bomb.setBounce(1);
-    bomb.setCollideWorldBounds(true);
-    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-    bomb.allowGravity = false;
-  }
+function preload() {
+  Game.scene.load.image('bomb', 'assets/media/images/bomb.png');
+}
 
-  const getBombs = () => {
-    return bombs;
-  }
+function init() {
+  bombs = Game.scene.physics.add.group();
+}
+
+function add(x) {
+  let bomb = bombs.create(x, 16, 'bomb');
+  bomb.setBounce(1);
+  bomb.setCollideWorldBounds(true);
+  bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+  bomb.allowGravity = false;
+}
+
+function getBombs() {
+  return bombs;
 }
