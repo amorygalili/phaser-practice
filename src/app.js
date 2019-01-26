@@ -6,5 +6,3 @@ import './assets/js/first-phaser-game/game';
 import {Physics} from 'Phaser'
 const Matter = Physics.Matter.Matter;
 
-
-Matter.use('matter-collision-events');
