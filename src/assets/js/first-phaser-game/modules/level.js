@@ -1,3 +1,6 @@
+import {Physics} from 'Phaser'
+
+const { Bodies, Body } = Physics.Matter.Matter;
 
 let platforms;
 
@@ -7,19 +10,29 @@ module.exports = {
   getPlatforms
 };
 
-function preload() {
-  Game.scene.load.image('ground', 'assets/media/images/platform.png');
-  Game.scene.load.image('sky', 'assets/media/images/sky.png');
+function preload(scene) {
+  scene.load.image('ground', 'assets/media/images/platform.png');
+  scene.load.image('sky', 'assets/media/images/sky.png');
 };
 
-function create() {
-  Game.scene.add.image(400, 300, 'sky');
+function create(scene) {
+  
+  scene.matter.world.setBounds(0, 0, 800, 600, 32, true, true, false, true);
+  
+  // background
+  scene.add.image(400, 300, 'sky');
 
-  platforms = Game.scene.physics.add.staticGroup();
-  platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-  platforms.create(600, 400, 'ground');
-  platforms.create(50, 250, 'ground');
-  platforms.create(750, 220, 'ground');
+  let groundOptions = {
+    isStatic: true,
+    tags: ['ground']
+  };
+
+  scene.matter.world.add([
+    scene.matter.add.image(400, 568, 'ground', null, groundOptions).setScale(2),
+    scene.matter.add.image(600, 400, 'ground', null, groundOptions),
+    scene.matter.add.image(50, 250, 'ground', null, groundOptions),
+    scene.matter.add.image(750, 220, 'ground', null, groundOptions)
+  ]);
 };
 
 function getPlatforms() {

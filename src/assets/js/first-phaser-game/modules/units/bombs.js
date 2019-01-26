@@ -9,12 +9,12 @@ module.exports = {
   get: getBombs
 };
 
-function preload() {
-  Game.scene.load.image('bomb', 'assets/media/images/bomb.png');
+function preload(scene) {
+  scene.load.image('bomb', 'assets/media/images/bomb.png');
 }
 
-function init() {
-  bombs = Game.scene.physics.add.group();
+function init(scene) {
+  bombs = scene.physics.add.group();
 }
 
 function add(x) {

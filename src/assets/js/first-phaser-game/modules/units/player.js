@@ -1,3 +1,7 @@
+import * as utils from '../../utils';
+import {Physics} from 'Phaser'
+const { Bodies, Body, World, Composite } = Physics.Matter.Matter;
+
 let player;
 
 module.exports = {
@@ -11,51 +15,52 @@ module.exports = {
   get: getPlayer
 };
 
-function preload() {
-  Game.scene.load.spritesheet('dude',
+function preload(scene) {
+  scene.load.spritesheet('dude',
     'assets/media/images/dude.png',
     { frameWidth: 32, frameHeight: 48 }
   );
 }
 
-function create() {
-  player = Game.scene.physics.add.sprite(100, 450, 'dude');
+function create(scene) {
+  player = scene.matter.add.sprite(100, 450, 'dude', 0, {
+     tags: ['player']
+  });
   player.setBounce(0.2);
-  player.setCollideWorldBounds(true);
 
-  Game.scene.anims.create({
+  scene.anims.create({
     key: 'left',
-    frames: Game.scene.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+    frames: scene.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
     frameRate: 10,
     repeat: -1
   });
 
-  Game.scene.anims.create({
+  scene.anims.create({
     key: 'turn',
     frames: [{ key: 'dude', frame: 4 }],
     frameRate: 20
   });
 
-  Game.scene.anims.create({
+  scene.anims.create({
     key: 'right',
-    frames: Game.scene.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+    frames: scene.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
     frameRate: 10,
     repeat: -1
   });
 }
 
 function moveLeft() {
-  player.setVelocityX(-160);
+  player.setVelocityX(-5);
   player.anims.play('left', true);
 };
 
 function moveRight() {
-  player.setVelocityX(160);
+  player.setVelocityX(5);
   player.anims.play('right', true);
 };
 
 function jump() {
-  player.setVelocityY(-330);
+  player.setVelocityY(-12);
 };
 
 function stop() {
@@ -63,8 +68,9 @@ function stop() {
   player.anims.play('turn');
 }
 
-function isTouchingGround() {
-  return player.body.touching.down;
+function isTouchingGround(scene) {
+  let collisions = utils.getCollisions(scene, player.body, 'ground');
+  return collisions.length > 0;
 }
 
 function getPlayer() {

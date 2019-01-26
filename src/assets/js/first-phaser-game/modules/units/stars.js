@@ -1,4 +1,7 @@
 
+import {Physics} from 'Phaser'
+const { Bodies, Body, World, Composites } = Physics.Matter.Matter;
+
 let stars;
 
 module.exports = {
@@ -10,19 +13,19 @@ module.exports = {
   get: getStars
 }
 
-function preload() {
-  Game.scene.load.image('star', 'assets/media/images/star.png');
+function preload(scene) {
+  scene.load.image('star', 'assets/media/images/star.png');
 };
 
-function create() {
-  stars = Game.scene.physics.add.group({
-    key: 'star',
-    repeat: 11,
-    setXY: { x: 12, y: 0, stepX: 70 }
-  });
+function create(scene) {
+  console.log('mattter', scene.matter);
 
-  stars.children.iterate(function (child) {
-    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+  let stars = Composites.stack(12, 0, 11, 1, 70, 0, function(x, y) {
+    let star = scene.matter.add.image(x, y, 'star', null, {
+      tags: ['star']
+    });
+    star.setBounce(Phaser.Math.FloatBetween(0.4, 0.8));
+    return star.body;
   });
 }
 
