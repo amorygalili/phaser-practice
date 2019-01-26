@@ -1,9 +1,5 @@
 import Phaser from 'Phaser';
-
-import {player, bombs, stars} from 'game-modules/units';
-import level from 'game-modules/level';
-import score from 'game-modules/score';
-
+import _ from 'lodash';
 
 class Scene extends Phaser.Scene {
 
@@ -13,61 +9,77 @@ class Scene extends Phaser.Scene {
   }
 
   preload() {
-    player.preload(this);
-    bombs.preload(this);
-    stars.preload(this);
-    level.preload(this);
+    // 700 x 380
+    this.load.image('block', 'assets/media/images/block.png');
+    // 124 x 126
+    this.load.image('block2', 'assets/media/images/block2.png');
   }
 
   create() {
-    level.create(this);
-    score.create(this);
-    player.create(this);
-    stars.create(this);
-    //bombs.init(this);
-    //this.physics.add.collider(player.get(), level.getPlatforms());
-    //this.physics.add.collider(stars.get(), level.getPlatforms());
-    //this.physics.add.collider(bombs.get(), level.getPlatforms())
-    //this.physics.add.overlap(player.get(), stars.get(), collectStar, null, this);
-    //this.physics.add.overlap(player.get(), bombs.get(), hitBomb, null, this);
+
+    //World boundary
+    this.matter.world.setBounds(0, 0, 800, 600, 32, true, true, false, true);
+
+    const canDrag = this.matter.world.nextGroup();
+
+    console.log(this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag))  //top
+    this.createBlock(1, 0, 1, 18).setCollisionGroup(canDrag)  //ground
+    this.createBlock(1, 1, 10, 1).setCollisionGroup(canDrag) //left block
+    this.createBlock(18, 1, 10, 1).setCollisionGroup(canDrag)  //right block
+
+    //  Constraint on canDrag items
+    this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, angularStiffness: 0,  collisionFilter: { group: canDrag } });
+
+
+    this.splitBlock();
   }
 
-  update() {
-    let cursors = this.input.keyboard.createCursorKeys();
-    if (cursors.left.isDown) {
-      player.moveLeft();
-    }
-    else if (cursors.right.isDown) {
-      player.moveRight();
-    }
-    else {
-      player.stop();
-    }
+  createBlock(x, y, rows, cols) {
+    // 40x40 px
+    let width = 40 * cols;
+    let height = 40 * rows;
 
-    if (cursors.up.isDown && player.isTouchingGround(this)) {
-      player.jump();
-    }
+    x = x * 40 + width / 2;
+    y = 600 - y * 40 - height / 2;
+
+    let sprite = this.add.tileSprite(x, y, 124 * cols, 124 * rows, 'block2');
+    return this.matter.add.gameObject(sprite)
+      .setFrictionAir(0.01)
+      .setFriction(.4)
+      .setFrictionStatic(2)
+      .setBounce(0)
+      .setScale(.32258);
+  }
+
+  //input: block
+  //output: 2 new blocks
+  splitBlock(block) {
+    // top, right, bottom, left
+    let edges = _.range(4);
+
+    // randomly select first edge
+    let edge1 = _.random(0, 3);
+
+    // remove edge1 so we don't select it again
+    edges.splice(edge1, 1);
+
+    let edge2 = edges[_.random(0, 2)];
+
+    console.log('edges:', edge1, edge2);
+
+  }
+
+
+  setSize(image, aspectRatio, width, height) {
+
+  }
+
+
+  update() {
+   
   }
 
 
 }
 
 export default new Scene();
-
-function collectStar(player, star) {
-  stars.collect(star);
-  score.add(10);
-
-  if (stars.allCollected()) {
-    stars.respawn();
-    var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-    bombs.add(x);
-  }
-}
-
-function hitBomb(player, bomb) {
-  this.physics.pause();
-  player.setTint(0xff0000);
-  player.anims.play('turn');
-}
-
