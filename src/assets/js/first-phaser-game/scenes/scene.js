@@ -37,7 +37,7 @@ class Scene extends Phaser.Scene {
     /* ========== DRAGGABLE ITEMS ========== */
     const canDrag = this.matter.world.nextGroup();
 
-    let block = this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag) //top
+    let ceiling = this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag) //top
    const groundFloor = this.createBlock(1, 0, 1, 18).setCollisionGroup(canDrag)  //ground
     const leftWall = this.createBlock(1, 1, 10, 1).setCollisionGroup(canDrag) //left block
    const rightWall = this.createBlock(18, 1, 10, 1).setCollisionGroup(canDrag)  //right block
@@ -83,7 +83,7 @@ class Scene extends Phaser.Scene {
     // leftWall.setCollisionCategory(cat2);
     // right.setCollisionCategory(cat2);
 
-    staticFloor.setCollidesWith([cat1]); //staticFloor collides with person (cat1)
+    ceiling.setCollidesWith([cat1]); //staticFloor collides with person (cat1)
 
     // bomb.setVelocityX(25);
 
@@ -103,7 +103,7 @@ class Scene extends Phaser.Scene {
     //  Constraint on canDrag items
     this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, angularStiffness: 0,  collisionFilter: { group: canDrag } });        
     //let splits = this.splitBlock(block);
-    let splits = this.splitBlock(staticFloor); //split the secondFloor to test the collision
+    let splits = this.splitBlock(ceiling); //split the secondFloor to test the collision
     splits.forEach(split => {
       split.setCollisionGroup(canDrag);
     })
