@@ -35,8 +35,8 @@ class Scene extends Phaser.Scene {
     /* ========== DRAGGABLE ITEMS ========== */
     const canDrag = this.matter.world.nextGroup();
 
-    //let block = this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag) //top
-   /*  this.createBlock(1, 0, 1, 18).setCollisionGroup(canDrag)  //ground
+    let block = this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag) //top
+   this.createBlock(1, 0, 1, 18).setCollisionGroup(canDrag)  //ground
     this.createBlock(1, 1, 10, 1).setCollisionGroup(canDrag) //left block
     this.createBlock(18, 1, 10, 1).setCollisionGroup(canDrag)  //right block
 
@@ -47,46 +47,46 @@ class Scene extends Phaser.Scene {
     this.matter.add.image(400, 350, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag);
     //1st floor 
     this.matter.add.image(200, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
-    this.matter.add.image(300, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag); */
+    this.matter.add.image(300, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag); 
 
-    // //FURNITURE
-    // this.matter.add.image(600, 600-40, 'tv', null, { chamfer: 16 }).setScale(0.2).setBounce(0.1).setCollisionGroup(canDrag);
+    //FURNITURE
+    this.matter.add.image(600, 600-40, 'tv', null, { chamfer: 16 }).setScale(0.2).setBounce(0.1).setCollisionGroup(canDrag);
 
-    // //STATIC FLOOR
-    // this.matter.add.image(400, 400, 'platform', null, { isStatic: true }).setScale(0.174); //second floor
+    //STATIC FLOOR
+    this.matter.add.image(400, 400, 'platform', null, { isStatic: true }).setScale(0.174); //second floor
 
     //PERSON and settings
     const person = this.matter.add.sprite(400, 450, 'dude').setScale(2);
     const bomb = this.matter.add.image(100, 450, 'bomb').setScale(1).setBounce(1).setFriction(0);
 
-    const leftBrick = this.matter.add.image(200, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
-    const rightBrick = this.matter.add.image(700, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
+    // const leftBrick = this.matter.add.image(200, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
+    // const rightBrick = this.matter.add.image(700, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
 
-    const cat1 = this.matter.world.nextCategory();
+    // const cat1 = this.matter.world.nextCategory();
 
-    bomb.setCollisionCategory(cat1);
-    person.setCollisionCategory(cat1);
+    // bomb.setCollisionCategory(cat1);
+    // person.setCollisionCategory(cat1);
 
-    const cat2 = this.matter.world.nextCategory();
+    // const cat2 = this.matter.world.nextCategory();
 
-    leftBrick.setCollisionCategory(cat2);
-    bomb.setCollidesWith([cat1, cat2]);
+    // leftBrick.setCollisionCategory(cat2);
+    // bomb.setCollidesWith([cat1, cat2]);
 
-    bomb.setVelocityX(25);
+    // bomb.setVelocityX(25);
 
-    this.matter.world.on('collisionstart', function (event/* , bomb, person */) {
-      // bomb.gameObject.setScale(1);
-      // person.gameObject.scaleY = 0.5;
-      event.pairs[0].bodyA.gameObject.setScale(0.5); //this is the person getting small when the bomb hits
-      event.pairs[0].bodyB.gameObject.setScale(0.5);
-    });
+    // this.matter.world.on('collisionstart', function (event/* , bomb, person */) {
+    //   // bomb.gameObject.setScale(1);
+    //   // person.gameObject.scaleY = 0.5;
+    //   event.pairs[0].bodyA.gameObject.setScale(0.5); //this is the person getting small when the bomb hits
+    //   event.pairs[0].bodyB.gameObject.setScale(0.5);
+    // });
   
     //  Constraint on canDrag items
     this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, angularStiffness: 0,  collisionFilter: { group: canDrag } });        
-    // let splits = this.splitBlock(block)
-    // splits.forEach(split => {
-    //   split.setCollisionGroup(canDrag);
-    // })
+    let splits = this.splitBlock(block)
+    splits.forEach(split => {
+      split.setCollisionGroup(canDrag);
+    })
   }
 
   createBlock(x, y, rows, cols) {
