@@ -67,14 +67,11 @@ class Scene extends Phaser.Scene {
 
     /* ========== COLLISIONS ========== */
 
-    // const leftBrick = this.matter.add.image(200, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
-    // const rightBrick = this.matter.add.image(700, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
-
     const cat1 = this.matter.world.nextCategory();
    
     person.setCollisionCategory(cat1);
    
-    const cat2 = this.matter.world.nextCategory();
+    //const cat2 = this.matter.world.nextCategory();
  
     // staticFloor.setCollisionCategory(cat2);
     // person.setCollisionCategory(cat2);
@@ -101,11 +98,6 @@ class Scene extends Phaser.Scene {
           event.pairs[0].bodyB.gameObject.scaleY = 0.5;
         }
       }
-      
-      // if (body.isPerson) {
-      //   body.gameObject.scaleY = 0.5;
-      //   console.log('body', body);
-      // }
     });
   
     //  Constraint on canDrag items
@@ -198,14 +190,12 @@ class Scene extends Phaser.Scene {
       }
     }
   
-
     let dimensions1 = this.getDimensions(shape1Vertices);
     let dimensions2 = this.getDimensions(shape2Vertices);
 
     let centerShape1 = Vertices.centre(shape1Vertices);
     let centerShape2 = Vertices.centre(shape2Vertices)
     
-
     Vertices.translate(shape1Vertices, {
       x: -boundsMin.x + (boundsMin.x - dimensions1.x),
       y: -boundsMin.y + (boundsMin.y - dimensions1.y),
@@ -231,7 +221,7 @@ class Scene extends Phaser.Scene {
   
     var poly2 = this.add.polygon(centerShape2.x, centerShape2.y, shape2Vertices, 0x000000, .5);
     
-    console.log('poly2:', poly2);
+    //console.log('poly2:', poly2);
     
     let split2 = this.matter.add.gameObject(poly2, { shape: { type: 'fromVerts', verts: shape2Vertices, flagInternal: true } })
       .setFrictionAir(0.01)
@@ -241,7 +231,7 @@ class Scene extends Phaser.Scene {
 
     split2.body.render.sprite.texture = 'dude';
 
-    console.log('split2:', split2.setTexture);
+    //console.log('split2:', split2.setTexture);
 
     block.destroy();
 
@@ -287,14 +277,14 @@ class Scene extends Phaser.Scene {
     };
   }
 
-  setSize(image, aspectRatio, width, height) {
+  // setSize(image, aspectRatio, width, height) {
 
-  }
+  // }
 
 
-  update() {
+  // update() {
    
-  }
+  // }
 
 
 }
