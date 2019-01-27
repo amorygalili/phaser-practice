@@ -137,8 +137,7 @@ class Scene extends Phaser.Scene {
       var splitPoint1Index = edge2 + 1;
       var splitPoint2Index = edge1 + 2;
     }
-
-
+    
     verticesWithSplitPoints.splice(splitPoint1Index, 0, splitPoint1);
     verticesWithSplitPoints.splice(splitPoint2Index, 0, splitPoint2);
 
