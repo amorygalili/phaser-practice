@@ -2,12 +2,26 @@
   <head>
     <style>
       canvas {
-        width: 100% !important;
         height: auto !important;
+      }
+
+      body {
+        text-align: center;
       }
     </style>
   </head>
   <body>
+
+    <script>
+      window.onresize = function(event) {
+        let width = Math.min(window.innerWidth, window.innerHeight * (800 / 600));
+        let canvas = document.getElementsByTagName('canvas');  
+        [...canvas].forEach(c => {
+          c.setAttribute('style', `width: ${width}px`);
+        });
+        console.log('canvas:', canvas);
+      };
+    </script>
   </body>
 
 </html>

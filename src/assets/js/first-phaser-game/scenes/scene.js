@@ -30,6 +30,7 @@ class Scene extends Phaser.Scene {
     /* ========== WORLD BOUNDARY ========== */
     this.matter.world.setBounds(0, 0, 800, 600, 32, true, true, false, true);
 
+
     /* ========== DRAGGABLE ITEMS ========== */
     const canDrag = this.matter.world.nextGroup();
 
@@ -45,7 +46,6 @@ class Scene extends Phaser.Scene {
     this.matter.add.image(400, 350, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag);
     
     console.log('block:', block, block.setTexture, block.renderTarget);
-    block.setTexture('cabinet');
     
     //1st floor 
     this.matter.add.image(200, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
@@ -76,10 +76,36 @@ class Scene extends Phaser.Scene {
     // //  Constraint on canDrag items
     // this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, angularStiffness: 0,  collisionFilter: { group: canDrag } });
 
-    let splits = this.splitBlock(block)
-    splits.forEach(split => {
-      split.setCollisionGroup(canDrag);
-    })
+    //let splits = this.splitBlock(block)
+    //splits.forEach(split => {
+    //  split.setCollisionGroup(canDrag);
+    //});
+
+    this.addMask(block);
+  }
+
+  addMask(gameObject) {
+    var graphics = this.make.graphics(0, 0);
+
+    console.log('graphics:', graphics);
+
+    //	Shapes drawn to the Graphics object must be filled.
+    //graphics.lineStyle(5, 0xFF00FF, 1.0);
+
+    //	Here we'll draw a circle
+    //graphics.drawCircle(100, 100, 100);
+
+    // You need to change this bit to suit the shape you're trying to mask.
+    graphics.lineStyle(5, 0xFF00FF, 1.0);
+    graphics.strokeRect(0, 0, 50, 50);
+    graphics.beginPath();
+    graphics.moveTo(50, 50);
+    graphics.lineTo(100, 100);
+    graphics.closePath();
+    graphics.strokePath();
+
+    var mask = graphics.createGeometryMask();
+    gameObject.setMask(mask);
   }
 
   createBlock(x, y, rows, cols) {
