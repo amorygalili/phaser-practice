@@ -1,5 +1,6 @@
 import Phaser from 'Phaser';
 import _ from 'lodash';
+// import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 
 const { Bodies, Body, Vertices } = Phaser.Physics.Matter.Matter;
 
@@ -23,18 +24,19 @@ class Scene extends Phaser.Scene {
     this.load.image('platform', 'assets/media/images/platform.png');
     this.load.image('cabinet', 'assets/media/images/cabinet.png');
     this.load.spritesheet('dude', 'assets/media/images/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('bomb', 'assets/media/images/bomb.png');
   }
 
   create() {
-
+    let gameOver = false;
     /* ========== WORLD BOUNDARY ========== */
     this.matter.world.setBounds(0, 0, 800, 600, 32, true, true, false, true);
 
     /* ========== DRAGGABLE ITEMS ========== */
     const canDrag = this.matter.world.nextGroup();
 
-    let block = this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag) //top
-    this.createBlock(1, 0, 1, 18).setCollisionGroup(canDrag)  //ground
+    //let block = this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag) //top
+   /*  this.createBlock(1, 0, 1, 18).setCollisionGroup(canDrag)  //ground
     this.createBlock(1, 1, 10, 1).setCollisionGroup(canDrag) //left block
     this.createBlock(18, 1, 10, 1).setCollisionGroup(canDrag)  //right block
 
@@ -43,50 +45,48 @@ class Scene extends Phaser.Scene {
     this.matter.add.image(400, 350, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
     this.matter.add.image(400, 350, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag);
     this.matter.add.image(400, 350, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag);
-    
-    console.log('block:', block, block.setTexture, block.renderTarget);
-    
     //1st floor 
     this.matter.add.image(200, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
-    this.matter.add.image(300, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
+    this.matter.add.image(300, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag); */
 
-    //FURNITURE
-    this.matter.add.image(600, 600-40, 'tv', null, { chamfer: 16 }).setScale(0.2).setBounce(0.1).setCollisionGroup(canDrag);
+    // //FURNITURE
+    // this.matter.add.image(600, 600-40, 'tv', null, { chamfer: 16 }).setScale(0.2).setBounce(0.1).setCollisionGroup(canDrag);
 
-    //STATIC FLOOR
-    this.matter.add.image(400, 400, 'platform', null, { isStatic: true }).setScale(0.174); //second floor
+    // //STATIC FLOOR
+    // this.matter.add.image(400, 400, 'platform', null, { isStatic: true }).setScale(0.174); //second floor
 
-    //PERSON
-    let person = this.matter.add.sprite(400, 450, 'dude').setScale(2);
+    //PERSON and settings
+    const person = this.matter.add.sprite(400, 450, 'dude').setScale(2);
+    const bomb = this.matter.add.image(100, 450, 'bomb').setScale(1).setBounce(1).setFriction(0);
 
+    const leftBrick = this.matter.add.image(200, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
+    const rightBrick = this.matter.add.image(700, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
+
+    const cat1 = this.matter.world.nextCategory();
+
+    bomb.setCollisionCategory(cat1);
+    person.setCollisionCategory(cat1);
+
+    const cat2 = this.matter.world.nextCategory();
+
+    leftBrick.setCollisionCategory(cat2);
+    bomb.setCollidesWith([cat1, cat2]);
+
+    bomb.setVelocityX(25);
+
+    this.matter.world.on('collisionstart', function (event/* , bomb, person */) {
+      // bomb.gameObject.setScale(1);
+      // person.gameObject.scaleY = 0.5;
+      event.pairs[0].bodyA.gameObject.setScale(0.5); //this is the person getting small when the bomb hits
+      event.pairs[0].bodyB.gameObject.setScale(0.5);
+    });
+  
     //  Constraint on canDrag items
     this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, angularStiffness: 0,  collisionFilter: { group: canDrag } });        
-
-    this.addMask(block);
-  }
-
-  addMask(gameObject) {
-    var graphics = this.make.graphics(0, 0);
-
-    console.log('graphics:', graphics);
-
-    //	Shapes drawn to the Graphics object must be filled.
-    //graphics.lineStyle(5, 0xFF00FF, 1.0);
-
-    //	Here we'll draw a circle
-    //graphics.drawCircle(100, 100, 100);
-
-    // You need to change this bit to suit the shape you're trying to mask.
-    graphics.lineStyle(5, 0xFF00FF, 1.0);
-    graphics.strokeRect(0, 0, 50, 50);
-    graphics.beginPath();
-    graphics.moveTo(50, 50);
-    graphics.lineTo(100, 100);
-    graphics.closePath();
-    graphics.strokePath();
-
-    var mask = graphics.createGeometryMask();
-    gameObject.setMask(mask);
+    // let splits = this.splitBlock(block)
+    // splits.forEach(split => {
+    //   split.setCollisionGroup(canDrag);
+    // })
   }
 
   createBlock(x, y, rows, cols) {
@@ -148,7 +148,7 @@ class Scene extends Phaser.Scene {
       var splitPoint1Index = edge2 + 1;
       var splitPoint2Index = edge1 + 2;
     }
-
+    
     verticesWithSplitPoints.splice(splitPoint1Index, 0, splitPoint1);
     verticesWithSplitPoints.splice(splitPoint2Index, 0, splitPoint2);
 
@@ -169,6 +169,7 @@ class Scene extends Phaser.Scene {
         });
       }
     }
+  
 
     let dimensions1 = this.getDimensions(shape1Vertices);
     let dimensions2 = this.getDimensions(shape2Vertices);
@@ -176,6 +177,7 @@ class Scene extends Phaser.Scene {
     let centerShape1 = Vertices.centre(shape1Vertices);
     let centerShape2 = Vertices.centre(shape2Vertices)
     
+
     Vertices.translate(shape1Vertices, {
       x: -boundsMin.x + (boundsMin.x - dimensions1.x),
       y: -boundsMin.y + (boundsMin.y - dimensions1.y),
@@ -211,7 +213,7 @@ class Scene extends Phaser.Scene {
 
     split2.body.render.sprite.texture = 'dude';
 
-    console.log('split2:', split2.texture);
+    console.log('split2:', split2.setTexture);
 
     block.destroy();
 
@@ -241,7 +243,6 @@ class Scene extends Phaser.Scene {
         maxX = point.x;
       }
 
-
       if (point.y < minY) {
         minY = point.y;
       }
@@ -257,7 +258,6 @@ class Scene extends Phaser.Scene {
       height: maxY - minY
     };
   }
-
 
   setSize(image, aspectRatio, width, height) {
 
