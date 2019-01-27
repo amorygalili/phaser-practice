@@ -1,6 +1,5 @@
 import Phaser from 'Phaser';
 import _ from 'lodash';
-// import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 
 const { Bodies, Body, Vertices } = Phaser.Physics.Matter.Matter;
 
@@ -25,14 +24,13 @@ class Scene extends Phaser.Scene {
     this.load.image('cabinet', 'assets/media/images/cabinet.png');
     this.load.spritesheet('dude', 'assets/media/images/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('bomb', 'assets/media/images/bomb.png');
-
     this.load.image('lamp', 'assets/media/images/lamp.png');
     this.load.image('microwave', 'assets/media/images/microwave.png');
     this.load.image('bookcase', 'assets/media/images/bookcase.png');
   }
 
   create() {
-    let gameOver = false;
+    //let gameOver = false;
     /* ========== WORLD BOUNDARY ========== */
     this.matter.world.setBounds(0, 0, 800, 600, 32, true, true, false, true);
 
@@ -42,7 +40,7 @@ class Scene extends Phaser.Scene {
     let block = this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag) //top
    const groundFloor = this.createBlock(1, 0, 1, 18).setCollisionGroup(canDrag)  //ground
     const leftWall = this.createBlock(1, 1, 10, 1).setCollisionGroup(canDrag) //left block
-    const rightWall = this.createBlock(18, 1, 10, 1).setCollisionGroup(canDrag)  //right block
+   const rightWall = this.createBlock(18, 1, 10, 1).setCollisionGroup(canDrag)  //right block
 
     //FURNITURE
     const tv = this.matter.add.image(600, 600-40, 'tv', null, { chamfer: 16 }).setScale(0.2).setBounce(0.1).setCollisionGroup(canDrag);
@@ -60,9 +58,12 @@ class Scene extends Phaser.Scene {
     const staticFloor = this.matter.add.image(400, 400, 'platform', null, { isStatic: true }).setScale(0.174); //second floor
 
     //PERSON and settings
-    const person = this.matter.add.sprite(400, 450, 'dude').setScale(2);
+    const person = this.matter.add.sprite(400, 450, 'dude', null, {
+      isPerson: true
+    }).setScale(2);
     const bomb = this.matter.add.image(100, 450, 'bomb').setScale(1).setBounce(1).setFriction(0);
 
+    console.log('person:', person);
 
     /* ========== COLLISIONS ========== */
 
@@ -70,13 +71,13 @@ class Scene extends Phaser.Scene {
     // const rightBrick = this.matter.add.image(700, 600, 'bricks', null, { chamfer: 16 }).setScale(1).setBounce(0.1).setCollisionGroup(canDrag);
 
     const cat1 = this.matter.world.nextCategory();
-
-    staticFloor.setCollisionCategory(cat1);
+   
     person.setCollisionCategory(cat1);
-
+   
     const cat2 = this.matter.world.nextCategory();
-
-    microwave.setCollisionCategory(cat2);
+ 
+    // staticFloor.setCollisionCategory(cat2);
+    // person.setCollisionCategory(cat2);
     // lamp.setCollisionCategory(cat2);
     //cabinet1.setCollisionCategory(cat2);
     //cabinet2.setCollisionCategory(cat2);
@@ -85,18 +86,26 @@ class Scene extends Phaser.Scene {
     // leftWall.setCollisionCategory(cat2);
     // right.setCollisionCategory(cat2);
 
-    staticFloor.setCollidesWith([cat1]);
+    staticFloor.setCollidesWith([cat1]); //staticFloor collides with person (cat1)
 
     // bomb.setVelocityX(25);
 
-    this.matter.world.on('collisionstart', function (event) {
-      //person.gameObject.setTint(0xffffff);
-      // bomb.gameObject.setScale(1);
-      //person.gameObject.scaleY = 0.5;
-      event.pairs[0].bodyA.gameObject.setScale(0.2) //this is the person getting small when the bomb hits
-
-      event.pairs[0].bodyB.gameObject;
-      //event.pairs[0].bodyB.gameObject.setTint(0xffffff);
+    this.matter.world.on('collisionstart', function (event) {      
+      if (event.pairs[0].bodyA.gameObject === person) {
+        if (event.pairs[0].bodyA.gameObject.scaleY !== .5) {
+          event.pairs[0].bodyA.gameObject.scaleY = 0.5;
+        }
+      }
+      else if (event.pairs[0].bodyB.gameObject === person) {
+        if (event.pairs[0].bodyB.gameObject.scaleY !== .5) {
+          event.pairs[0].bodyB.gameObject.scaleY = 0.5;
+        }
+      }
+      
+      // if (body.isPerson) {
+      //   body.gameObject.scaleY = 0.5;
+      //   console.log('body', body);
+      // }
     });
   
     //  Constraint on canDrag items
