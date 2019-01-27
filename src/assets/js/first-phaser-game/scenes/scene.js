@@ -25,6 +25,10 @@ class Scene extends Phaser.Scene {
     this.load.image('cabinet', 'assets/media/images/cabinet.png');
     this.load.spritesheet('dude', 'assets/media/images/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('bomb', 'assets/media/images/bomb.png');
+
+    this.load.image('lamp', 'assets/media/images/lamp.png');
+    this.load.image('microwave', 'assets/media/images/microwave.png');
+    this.load.image('bookcase', 'assets/media/images/bookcase.png');
   }
 
   create() {
@@ -42,12 +46,13 @@ class Scene extends Phaser.Scene {
 
     //BRICKS
     //2nd floor middle:
-    this.matter.add.image(400, 350, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
+    this.matter.add.image(200, 350, 'bookcase', null, { chamfer: 16 }).setScale(0.27).setBounce(0.1).setCollisionGroup(canDrag);
     this.matter.add.image(400, 350, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag);
-    this.matter.add.image(400, 350, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag);
+    this.matter.add.image(700, 350, 'lamp', null, { chamfer: 16 }).setScale(0.2).setBounce(0.1).setCollisionGroup(canDrag);
+
     //1st floor 
-    this.matter.add.image(200, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
-    this.matter.add.image(300, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag); 
+    this.matter.add.image(200, 600-40, 'microwave', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
+    this.matter.add.image(300, 600-40, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag); 
 
     //FURNITURE
     this.matter.add.image(600, 600-40, 'tv', null, { chamfer: 16 }).setScale(0.2).setBounce(0.1).setCollisionGroup(canDrag);
