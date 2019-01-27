@@ -43,6 +43,10 @@ class Scene extends Phaser.Scene {
     this.matter.add.image(400, 350, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
     this.matter.add.image(400, 350, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag);
     this.matter.add.image(400, 350, 'cabinet', null, { chamfer: 16 }).setScale(0.07).setBounce(0.1).setCollisionGroup(canDrag);
+    
+    console.log('block:', block, block.setTexture, block.renderTarget);
+    block.setTexture('cabinet');
+    
     //1st floor 
     this.matter.add.image(200, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
     this.matter.add.image(300, 600-40, 'bricks', null, { chamfer: 16 }).setScale(0.3).setBounce(0.1).setCollisionGroup(canDrag);
@@ -137,7 +141,7 @@ class Scene extends Phaser.Scene {
       var splitPoint1Index = edge2 + 1;
       var splitPoint2Index = edge1 + 2;
     }
-    
+
     verticesWithSplitPoints.splice(splitPoint1Index, 0, splitPoint1);
     verticesWithSplitPoints.splice(splitPoint2Index, 0, splitPoint2);
 
@@ -202,7 +206,7 @@ class Scene extends Phaser.Scene {
 
     split2.body.render.sprite.texture = 'dude';
 
-    console.log('split2:', split2.setTexture);
+    console.log('split2:', split2.texture);
 
     block.destroy();
 
