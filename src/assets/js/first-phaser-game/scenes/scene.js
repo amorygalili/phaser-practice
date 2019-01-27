@@ -30,7 +30,6 @@ class Scene extends Phaser.Scene {
     /* ========== WORLD BOUNDARY ========== */
     this.matter.world.setBounds(0, 0, 800, 600, 32, true, true, false, true);
 
-
     /* ========== DRAGGABLE ITEMS ========== */
     const canDrag = this.matter.world.nextGroup();
 
@@ -62,24 +61,6 @@ class Scene extends Phaser.Scene {
 
     //  Constraint on canDrag items
     this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, angularStiffness: 0,  collisionFilter: { group: canDrag } });        
-
-    // //World boundary
-    // this.matter.world.setBounds(0, 0, 800, 600, 32, true, true, false, true);
-
-    // const canDrag = this.matter.world.nextGroup();
-
-    // let block = this.createBlock(1, 11, 1, 18).setCollisionGroup(canDrag);  //top
-    // this.createBlock(1, 0, 1, 18).setCollisionGroup(canDrag)  //ground
-    // this.createBlock(1, 1, 10, 1).setCollisionGroup(canDrag) //left block
-    // this.createBlock(18, 1, 10, 1).setCollisionGroup(canDrag)  //right block
-
-    // //  Constraint on canDrag items
-    // this.matter.add.mouseSpring({ length: 1, stiffness: 0.6, angularStiffness: 0,  collisionFilter: { group: canDrag } });
-
-    //let splits = this.splitBlock(block)
-    //splits.forEach(split => {
-    //  split.setCollisionGroup(canDrag);
-    //});
 
     this.addMask(block);
   }
@@ -188,7 +169,6 @@ class Scene extends Phaser.Scene {
         });
       }
     }
-  
 
     let dimensions1 = this.getDimensions(shape1Vertices);
     let dimensions2 = this.getDimensions(shape2Vertices);
@@ -196,7 +176,6 @@ class Scene extends Phaser.Scene {
     let centerShape1 = Vertices.centre(shape1Vertices);
     let centerShape2 = Vertices.centre(shape2Vertices)
     
-
     Vertices.translate(shape1Vertices, {
       x: -boundsMin.x + (boundsMin.x - dimensions1.x),
       y: -boundsMin.y + (boundsMin.y - dimensions1.y),
